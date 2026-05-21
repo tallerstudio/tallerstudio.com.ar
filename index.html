@@ -124,7 +124,7 @@
     #hero {
       height: 100vh;
       display: grid;
-      grid-template-rows: 1fr auto auto;
+      grid-template-rows: 1fr auto;
       padding: var(--pad);
       padding-top: calc(60px + clamp(24px, 5vw, 60px));
       position: relative;
@@ -741,9 +741,10 @@
       .steps-grid { grid-template-columns: 1fr; gap: 40px; }
       .product-item { grid-template-columns: 1fr; gap: 10px; }
       .product-num { display: none; }
-      .product-time { width: fit-content; }
+      .product-header { flex-direction: column; align-items: flex-start; gap: 6px; }
       .contact-grid { grid-template-columns: 1fr; }
       .quienes-right { border-left: none; padding-left: 0; border-top: 1px solid rgba(90,90,82,0.15); padding-top: 32px; }
+      .ticker-track { animation-duration: 18s; }
     }
   </style>
 </head>
@@ -807,10 +808,6 @@
       </div>
     </div>
 
-    <div class="hero-footer">
-      <p class="hero-tagline">tallerstudio.com.ar</p>
-      <p class="hero-year">2026</p>
-    </div>
   </section>
 
   <!-- QUIÉNES SOMOS -->
