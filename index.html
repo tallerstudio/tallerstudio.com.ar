@@ -595,6 +595,17 @@
 
     .btn-submit:hover { opacity: 0.85; }
 
+    .form-success {
+      font-family: var(--serif);
+      font-size: clamp(28px, 3.5vw, 42px);
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      line-height: 1.1;
+      padding: 20px 0;
+    }
+
+    .form-success span { color: var(--accent); }
+
     /* Sidebar */
     .contact-sidebar { display: flex; flex-direction: column; }
 
@@ -993,6 +1004,30 @@
     }, { threshold: 0.12 });
 
     document.querySelectorAll('[data-anim]').forEach(el => observer.observe(el));
+
+    const form = document.querySelector('.contact-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('.btn-submit');
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          form.innerHTML = '<p class="form-success">Mensaje recibido.<br><span>Te contactamos pronto.</span></p>';
+        } else {
+          btn.textContent = 'Enviar →';
+          btn.disabled = false;
+        }
+      } catch {
+        btn.textContent = 'Enviar →';
+        btn.disabled = false;
+      }
+    });
   </script>
 
 </body>
