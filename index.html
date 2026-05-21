@@ -4,26 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <title>Taller Studio — Pronto</title>
+  <title>Taller Studio — Automatización, Datos e IA</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0e0e0e;
-      --ink: #f0ece4;
+      --bg:     #0e0e0e;
+      --ink:    #f0ece4;
       --accent: #8b5cf6;
-      --muted: #5a5a52;
-      --serif: 'Bebas Neue', sans-serif;
-      --sans: 'DM Sans', sans-serif;
+      --muted:  #5a5a52;
+      --soft:   #c4c0b8;
+      --serif:  'Bebas Neue', sans-serif;
+      --sans:   'DM Sans', sans-serif;
+      --pad:    clamp(24px, 5vw, 60px);
     }
 
-    html, body {
-      height: 100%;
+    html { scroll-behavior: smooth; }
+
+    body {
       background: var(--bg);
       color: var(--ink);
       font-family: var(--sans);
-      overflow: hidden;
     }
 
     /* Atmospheric glow */
@@ -34,7 +36,7 @@
       bottom: -20%;
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -50,60 +52,92 @@
       opacity: 0.6;
     }
 
-    .page {
-      height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr auto auto;
-      padding: clamp(24px, 5vw, 60px);
-      position: relative;
-    }
-
-    /* Top bar */
-    header {
+    /* ── NAV ── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      height: 60px;
+      padding: 0 var(--pad);
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-start;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 0.1s;
+      background: rgba(14,14,14,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(90,90,82,0.12);
     }
 
-    .logo {
+    .nav-logo {
       font-family: var(--serif);
-      font-size: clamp(22px, 3vw, 32px);
+      font-size: clamp(20px, 2.5vw, 26px);
       letter-spacing: 0.08em;
       color: var(--ink);
+      text-decoration: none;
       line-height: 1;
     }
 
-    .logo span {
+    .nav-logo span {
       font-family: var(--serif);
-      font-size: clamp(23px, 3vw, 33px);
-      letter-spacing: 0.08em;
+      font-size: clamp(21px, 2.5vw, 27px);
       color: var(--accent);
-      line-height: 1;
     }
 
-    .badge {
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(20px, 3vw, 40px);
+      list-style: none;
+    }
+
+    .nav-links a {
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
-      border: 1px solid var(--muted);
-      padding: 6px 12px;
-      margin-top: 4px;
+      text-decoration: none;
+      transition: color 0.2s;
     }
 
-    /* Center content */
-    main {
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid rgba(139,92,246,0.4);
+      padding: 7px 16px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    /* ── HERO ── */
+    #hero {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto auto;
+      padding: var(--pad);
+      padding-top: calc(60px + clamp(24px, 5vw, 60px));
+      position: relative;
+    }
+
+    .hero-main {
       display: flex;
       flex-direction: column;
       justify-content: center;
       max-width: 780px;
     }
 
-    .eyebrow {
+    .hero-eyebrow {
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.2em;
@@ -111,13 +145,10 @@
       color: var(--accent);
       margin-bottom: 28px;
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 0.3s;
+      animation: fadeUp 0.8s ease forwards 0.3s;
     }
 
-    .eyebrow::before {
-      content: '— ';
-    }
+    .hero-eyebrow::before { content: '— '; }
 
     h1 {
       font-family: var(--serif);
@@ -126,8 +157,7 @@
       letter-spacing: 0.02em;
       color: var(--ink);
       opacity: 0;
-      animation: fadeUp 0.9s ease forwards;
-      animation-delay: 0.5s;
+      animation: fadeUp 0.9s ease forwards 0.5s;
     }
 
     h1 em {
@@ -136,40 +166,36 @@
       display: block;
     }
 
-    .description {
+    .hero-desc {
       margin-top: 36px;
       font-size: clamp(15px, 1.8vw, 18px);
       font-weight: 300;
       line-height: 1.65;
-      color: #c4c0b8;
+      color: var(--soft);
       max-width: 480px;
       opacity: 0;
-      animation: fadeUp 0.9s ease forwards;
-      animation-delay: 0.75s;
+      animation: fadeUp 0.9s ease forwards 0.75s;
     }
 
-    /* Horizontal rule accent */
-    .rule {
+    .hero-rule {
       width: 40px;
       height: 2px;
       background: var(--accent);
       margin: 32px 0;
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 0.9s;
+      animation: fadeUp 0.8s ease forwards 0.9s;
     }
 
-    .contact-line {
+    .hero-contact {
       font-size: 13px;
       font-weight: 400;
       color: var(--muted);
       letter-spacing: 0.05em;
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 1.05s;
+      animation: fadeUp 0.8s ease forwards 1.05s;
     }
 
-    .contact-line a {
+    .hero-contact a {
       color: var(--ink);
       text-decoration: none;
       border-bottom: 1px solid var(--muted);
@@ -177,62 +203,21 @@
       transition: color 0.2s, border-color 0.2s;
     }
 
-    .contact-line a:hover {
+    .hero-contact a:hover {
       color: var(--accent);
       border-color: var(--accent);
     }
 
-    /* Bottom bar */
-    footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 1.2s;
-    }
-
-    .tagline {
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      font-style: italic;
-    }
-
-    .year {
-      font-family: var(--serif);
-      font-size: 48px;
-      line-height: 1;
-      color: #1a1a18;
-      letter-spacing: 0.04em;
-      user-select: none;
-    }
-
-    /* Decorative vertical line */
-    .v-line {
-      position: fixed;
-      right: clamp(24px, 5vw, 60px);
-      top: 50%;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 120px;
-      background: linear-gradient(to bottom, transparent, var(--muted), transparent);
-      opacity: 0.4;
-    }
-
-    /* Tech ticker */
+    /* Ticker */
     .ticker-wrap {
-      width: calc(100% + clamp(48px, 10vw, 120px) * 2);
-      margin-left: calc(-1 * clamp(24px, 5vw, 60px));
+      width: calc(100% + var(--pad) * 2);
+      margin-left: calc(-1 * var(--pad));
       overflow: hidden;
       mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
       -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
       padding: 20px 0 0;
-      margin-bottom: 20px;
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-      animation-delay: 1.35s;
+      animation: fadeUp 0.8s ease forwards 1.35s;
     }
 
     .ticker-track {
@@ -267,6 +252,465 @@
       flex-shrink: 0;
     }
 
+    .hero-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-top: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1.2s;
+    }
+
+    .hero-tagline {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      font-style: italic;
+    }
+
+    .hero-year {
+      font-family: var(--serif);
+      font-size: 48px;
+      line-height: 1;
+      color: #1a1a18;
+      letter-spacing: 0.04em;
+      user-select: none;
+    }
+
+    /* ── SECCIONES COMPARTIDAS ── */
+    section {
+      padding: clamp(80px, 10vw, 140px) var(--pad);
+      position: relative;
+      z-index: 1;
+    }
+
+    .s-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .s-eyebrow::before { content: '— '; }
+
+    .s-title {
+      font-family: var(--serif);
+      font-size: clamp(44px, 7vw, 88px);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      margin-bottom: 48px;
+    }
+
+    .s-title em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .inline-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      margin-top: 48px;
+      border-bottom: 1px solid rgba(139,92,246,0.3);
+      padding-bottom: 3px;
+      transition: gap 0.25s, border-color 0.2s;
+    }
+
+    .inline-cta:hover {
+      gap: 16px;
+      border-color: var(--accent);
+    }
+
+    /* ── QUIÉNES SOMOS ── */
+    #quienes { background: #0b0b0b; }
+
+    .quienes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: clamp(40px, 8vw, 120px);
+      align-items: start;
+    }
+
+    .quienes-left .s-title { margin-bottom: 28px; }
+
+    .quienes-left p {
+      font-size: clamp(15px, 1.6vw, 17px);
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--soft);
+      max-width: 320px;
+    }
+
+    .quienes-right {
+      border-left: 1px solid rgba(90,90,82,0.15);
+      padding-left: clamp(32px, 4vw, 60px);
+      padding-top: 8px;
+    }
+
+    .quienes-right p {
+      font-size: clamp(15px, 1.6vw, 17px);
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--soft);
+      margin-bottom: 20px;
+    }
+
+    .quienes-right p:last-child { margin-bottom: 0; }
+
+    /* ── QUÉ HACEMOS ── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      background: rgba(90,90,82,0.08);
+    }
+
+    .service-card {
+      background: var(--bg);
+      padding: clamp(32px, 4vw, 52px);
+      transition: background 0.3s;
+    }
+
+    .service-card:hover { background: #111111; }
+
+    .service-num {
+      font-family: var(--serif);
+      font-size: 52px;
+      color: #1c1c1a;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .service-name {
+      font-family: var(--serif);
+      font-size: clamp(22px, 2.8vw, 30px);
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    .service-desc {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--soft);
+      max-width: 340px;
+    }
+
+    /* ── PRODUCTOS ── */
+    #productos { background: #0b0b0b; }
+
+    .products-list { margin-top: 16px; }
+
+    .product-item {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: clamp(16px, 4vw, 40px);
+      align-items: start;
+      padding: clamp(28px, 3vw, 40px) 0;
+      border-bottom: 1px solid rgba(90,90,82,0.12);
+      transition: opacity 0.2s;
+    }
+
+    .product-item:first-child { border-top: 1px solid rgba(90,90,82,0.12); }
+    .product-item:hover { opacity: 0.8; }
+
+    .product-num {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      padding-top: 6px;
+    }
+
+    .product-header {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .product-name {
+      font-family: var(--serif);
+      font-size: clamp(22px, 3.2vw, 38px);
+      letter-spacing: 0.03em;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .product-time {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+      opacity: 0.7;
+    }
+
+    .product-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--soft);
+      max-width: 600px;
+    }
+
+    /* ── CÓMO TRABAJAMOS ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(32px, 5vw, 80px);
+    }
+
+    .step-num {
+      font-family: var(--serif);
+      font-size: 72px;
+      color: #161614;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .step-name {
+      font-family: var(--serif);
+      font-size: clamp(20px, 2.4vw, 26px);
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--soft);
+    }
+
+    /* ── CONTACTO ── */
+    #contacto { background: #0b0b0b; }
+
+    .contact-question {
+      font-family: var(--serif);
+      font-size: clamp(36px, 5.5vw, 72px);
+      line-height: 0.96;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      max-width: 760px;
+      margin-bottom: 20px;
+    }
+
+    .contact-question em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .contact-sub {
+      font-size: clamp(14px, 1.5vw, 16px);
+      font-weight: 300;
+      color: var(--soft);
+      max-width: 440px;
+      line-height: 1.65;
+      margin-bottom: 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: clamp(40px, 7vw, 100px);
+      margin-top: 60px;
+      align-items: start;
+    }
+
+    /* Form */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-input,
+    .form-textarea {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(90,90,82,0.22);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 300;
+      padding: 12px 16px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus { border-color: var(--accent); }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: rgba(90,90,82,0.6); }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .btn-submit {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--accent);
+      border: none;
+      padding: 14px 32px;
+      cursor: pointer;
+      font-family: var(--sans);
+      align-self: flex-start;
+      transition: opacity 0.2s;
+    }
+
+    .btn-submit:hover { opacity: 0.85; }
+
+    /* Sidebar */
+    .contact-sidebar { display: flex; flex-direction: column; }
+
+    .contact-option {
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(90,90,82,0.12);
+    }
+
+    .contact-option:first-child { border-top: 1px solid rgba(90,90,82,0.12); }
+
+    .contact-option-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .contact-social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .contact-social-link {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--soft);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: color 0.2s;
+    }
+
+    .contact-social-link:hover { color: var(--ink); }
+
+    .contact-social-link span {
+      font-size: 11px;
+      color: var(--accent);
+      opacity: 0.6;
+    }
+
+    .contact-calendar-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--soft);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .btn-calendar {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      border: 1px solid rgba(90,90,82,0.35);
+      padding: 12px 24px;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-calendar:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: clamp(20px, 3vw, 32px) var(--pad);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(90,90,82,0.12);
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-tagline {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      font-style: italic;
+    }
+
+    .footer-year {
+      font-family: var(--serif);
+      font-size: 36px;
+      line-height: 1;
+      color: #1a1a18;
+      letter-spacing: 0.04em;
+      user-select: none;
+    }
+
+    /* ── SCROLL ANIMATIONS ── */
+    [data-anim] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    [data-anim].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    [data-anim][data-delay="1"] { transition-delay: 0.1s; }
+    [data-anim][data-delay="2"] { transition-delay: 0.2s; }
+    [data-anim][data-delay="3"] { transition-delay: 0.3s; }
+    [data-anim][data-delay="4"] { transition-delay: 0.4s; }
+
+    /* ── KEYFRAMES ── */
     @keyframes ticker {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
@@ -277,34 +721,51 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 600px) {
-      .year { font-size: 48px; }
-      .v-line { display: none; }
-      .badge { display: none; }
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .quienes-grid { grid-template-columns: 1fr; gap: 32px; }
+      .quienes-left p { max-width: 100%; }
+      .services-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; gap: 40px; }
+      .product-item { grid-template-columns: 1fr; gap: 10px; }
+      .product-num { display: none; }
+      .product-time { width: fit-content; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .quienes-right { border-left: none; padding-left: 0; border-top: 1px solid rgba(90,90,82,0.15); padding-top: 32px; }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <div class="logo">Taller<span>S</span>tudio</div>
-      <div class="badge">En construcción</div>
-    </header>
 
-    <main>
-      <p class="eyebrow">Pronto</p>
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="#hero" class="nav-logo">Taller<span>S</span>tudio</a>
+    <ul class="nav-links">
+      <li><a href="#quienes">Quiénes somos</a></li>
+      <li><a href="#que-hacemos">Qué hacemos</a></li>
+      <li><a href="#productos">Productos</a></li>
+      <li><a href="#como-trabajamos">Cómo trabajamos</a></li>
+    </ul>
+    <a href="#contacto" class="nav-cta">Hablemos</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-main">
+      <p class="hero-eyebrow">Automatización · Datos · IA</p>
       <h1>
         Tu objetivo<br>
         <em>es el nuestro.</em>
       </h1>
-      <p class="description">
+      <p class="hero-desc">
         Automatización, datos e inteligencia artificial para empresas que quieren optimizar su operación.
       </p>
-      <div class="rule"></div>
-      <p class="contact-line">
+      <div class="hero-rule"></div>
+      <p class="hero-contact">
         Consultas →&nbsp;<a href="mailto:contacto@tallerstudio.com.ar">contacto@tallerstudio.com.ar</a>
       </p>
-     </main>
+    </div>
 
     <div class="ticker-wrap">
       <div class="ticker-track">
@@ -335,12 +796,204 @@
       </div>
     </div>
 
-    <footer>
-      <p class="tagline">tallerstudio.com.ar</p>
-      <p class="year">2026</p>
-    </footer>
-  </div>
+    <div class="hero-footer">
+      <p class="hero-tagline">tallerstudio.com.ar</p>
+      <p class="hero-year">2026</p>
+    </div>
+  </section>
 
-  <div class="v-line"></div>
+  <!-- QUIÉNES SOMOS -->
+  <section id="quienes">
+    <p class="s-eyebrow" data-anim>Quiénes somos</p>
+    <div class="quienes-grid">
+      <div class="quienes-left">
+        <h2 class="s-title" data-anim>Hacemos que<br><em>funcione.</em></h2>
+        <p data-anim data-delay="1">Llevamos años resolviendo problemas operativos desde adentro de las organizaciones. Taller Studio es la forma de hacer eso para más empresas.</p>
+        <a href="#contacto" class="inline-cta" data-anim data-delay="2">Hablemos →</a>
+      </div>
+      <div class="quienes-right" data-anim data-delay="2">
+        <p>Taller Studio nació de una convicción simple: hay muchas empresas que crecieron de verdad, pero que todavía operan como el primer día. Con planillas, procesos manuales y equipos que pierden horas en tareas que podrían funcionar solas.</p>
+        <p>Entendemos cómo trabajás, y lo mejoramos juntos. Con la tecnología adecuada para el momento en que estás, sin sobreingenierizar ni quedarse corto.</p>
+        <p>Creemos que optimizar una operación no es un lujo reservado para grandes compañías. Es lo que le permite a un negocio que ya funciona, funcionar mejor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUÉ HACEMOS -->
+  <section id="que-hacemos">
+    <p class="s-eyebrow" data-anim>Qué hacemos</p>
+    <h2 class="s-title" data-anim data-delay="1">Cuatro formas<br>de <em>agregar valor.</em></h2>
+    <div class="services-grid">
+      <div class="service-card" data-anim data-delay="1">
+        <div class="service-num">01</div>
+        <div class="service-name">Automatización de Procesos</div>
+        <p class="service-desc">Identificamos tareas manuales y repetitivas y las automatizamos. Lo que antes llevaba horas, funciona solo.</p>
+      </div>
+      <div class="service-card" data-anim data-delay="2">
+        <div class="service-num">02</div>
+        <div class="service-name">Integración de Sistemas</div>
+        <p class="service-desc">Conectamos las plataformas que ya usás para que la información fluya entre ellas y puedas ver el cuadro completo.</p>
+      </div>
+      <div class="service-card" data-anim data-delay="3">
+        <div class="service-num">03</div>
+        <div class="service-name">Datos e Inteligencia Operativa</div>
+        <p class="service-desc">Ordenamos la información dispersa y la convertimos en reportes que cualquier miembro del equipo puede interpretar.</p>
+      </div>
+      <div class="service-card" data-anim data-delay="4">
+        <div class="service-num">04</div>
+        <div class="service-name">Desarrollo a Medida</div>
+        <p class="service-desc">Para cuando la solución no existe en ninguna herramienta del mercado. Web, backoffice, bots conversacionales e infraestructura cloud.</p>
+      </div>
+    </div>
+    <a href="#contacto" class="inline-cta" data-anim>¿Aplica a tu negocio? Hablemos →</a>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <section id="productos">
+    <p class="s-eyebrow" data-anim>Los Productos</p>
+    <h2 class="s-title" data-anim data-delay="1">Qué entregamos<br>y en cuánto <em>tiempo.</em></h2>
+    <div class="products-list">
+      <div class="product-item" data-anim>
+        <span class="product-num">01</span>
+        <div>
+          <div class="product-header">
+            <div class="product-name">Automatización de Procesos</div>
+            <span class="product-time">— 1 semana</span>
+          </div>
+          <p class="product-desc">Script, flujo o automatización puntual. Puede ser un proceso interno del equipo o uno externo con clientes y proveedores.</p>
+        </div>
+      </div>
+      <div class="product-item" data-anim data-delay="1">
+        <span class="product-num">02</span>
+        <div>
+          <div class="product-header">
+            <div class="product-name">Integración de Sistemas</div>
+            <span class="product-time">1 — 2 semanas</span>
+          </div>
+          <p class="product-desc">Conexión entre plataformas, tablas de datos, fuentes automatizadas. La información disponible en tiempo real donde ya trabajás.</p>
+        </div>
+      </div>
+      <div class="product-item" data-anim data-delay="2">
+        <span class="product-num">03</span>
+        <div>
+          <div class="product-header">
+            <div class="product-name">Datos e Inteligencia Operativa</div>
+            <span class="product-time">1 — 2 semanas</span>
+          </div>
+          <p class="product-desc">Dashboard, tablero Looker Studio, informes automatizados. El equipo consulta cuando quiere, sin depender de nadie.</p>
+        </div>
+      </div>
+      <div class="product-item" data-anim data-delay="3">
+        <span class="product-num">04</span>
+        <div>
+          <div class="product-header">
+            <div class="product-name">Desarrollo a Medida</div>
+            <span class="product-time">2 — 4 semanas</span>
+          </div>
+          <p class="product-desc">Sitios web con hosting, sistemas de gestión operativa (backoffice) con JWT, rate limiting y secret managers. Bots conversacionales para WhatsApp y otras plataformas de mensajería. Configuración de infraestructura: Google Workspace, Google Cloud, Cloudflare y dominios .com.ar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO TRABAJAMOS -->
+  <section id="como-trabajamos">
+    <p class="s-eyebrow" data-anim>Cómo trabajamos</p>
+    <h2 class="s-title" data-anim data-delay="1">Primero<br><em>escuchamos.</em></h2>
+    <div class="steps-grid">
+      <div class="step" data-anim data-delay="1">
+        <div class="step-num">01</div>
+        <div class="step-name">La Conversación</div>
+        <p class="step-desc">Nos contás cómo trabaja tu equipo: qué hacen, cómo lo hacen, por qué lo hacen así. Sin preparación previa. Mientras escuchamos, ya estamos pensando en cómo mejorarlo.</p>
+      </div>
+      <div class="step" data-anim data-delay="2">
+        <div class="step-num">02</div>
+        <div class="step-name">La Propuesta</div>
+        <p class="step-desc">Compartimos lo que identificamos. Siempre pensando en la curva: dónde está el negocio hoy, hacia dónde podría ir y qué tiene sentido hacer primero.</p>
+      </div>
+      <div class="step" data-anim data-delay="3">
+        <div class="step-num">03</div>
+        <div class="step-name">La Ejecución</div>
+        <p class="step-desc">El ritmo lo definimos juntos. Qué hacemos, cuándo revisamos, cuándo entregamos. Lo que funcione para el proyecto.</p>
+      </div>
+    </div>
+    <a href="#contacto" class="inline-cta" data-anim>Arrancamos con una conversación →</a>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto">
+    <p class="s-eyebrow" data-anim>Contacto</p>
+    <h2 class="contact-question" data-anim data-delay="1">
+      ¿Tu equipo pierde tiempo en tareas que podrían<em> funcionar solas</em>?
+    </h2>
+    <p class="contact-sub" data-anim data-delay="2">
+      Contanos cómo trabaja tu equipo. El resto lo vemos juntos.
+    </p>
+
+    <div class="contact-grid" data-anim data-delay="3">
+
+      <!-- FORMULARIO -->
+      <form class="contact-form" action="https://formspree.io/f/mwvzljab" method="POST">
+        <div class="form-group">
+          <label class="form-label" for="nombre">Nombre</label>
+          <input class="form-input" type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-input" type="email" id="email" name="email" placeholder="tu@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="empresa">Empresa</label>
+          <input class="form-input" type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="mensaje">Contanos tu caso</label>
+          <textarea class="form-textarea" id="mensaje" name="mensaje" placeholder="¿Qué proceso te gustaría automatizar o mejorar?" required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Enviar →</button>
+      </form>
+
+      <!-- SIDEBAR -->
+      <div class="contact-sidebar">
+        <div class="contact-option">
+          <p class="contact-option-label">Redes</p>
+          <div class="contact-social-links">
+            <a href="https://wa.me/5491160149350" target="_blank" rel="noopener" class="contact-social-link">
+              <span>→</span> WhatsApp · +54 9 11 6014 9350
+            </a>
+            <a href="https://www.instagram.com/tallerstudio__/" target="_blank" rel="noopener" class="contact-social-link">
+              <span>→</span> Instagram · @tallerstudio__
+            </a>
+          </div>
+        </div>
+        <div class="contact-option">
+          <p class="contact-option-label">Agendar una reunión</p>
+          <p class="contact-calendar-desc">Primera conversación de 30 minutos. Contanos qué está pasando en tu operación y vemos si podemos ayudarte.</p>
+          <a href="https://calendar.app.google/c2vnnw2MZtvFW1PJ7" target="_blank" rel="noopener" class="btn-calendar">Ver disponibilidad →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-tagline">tallerstudio.com.ar</p>
+    <p class="footer-year">2026</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('[data-anim]').forEach(el => observer.observe(el));
+  </script>
+
 </body>
 </html>
