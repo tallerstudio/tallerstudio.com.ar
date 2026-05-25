@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 72" width="400" height="72">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+    </style>
+  </defs>
+  <text x="0" y="58" font-family="'Bebas Neue', Impact, sans-serif" font-size="56" letter-spacing="4">
+    <tspan fill="#f0ece4">TALLER</tspan><tspan fill="#8b5cf6" font-size="58">S</tspan><tspan fill="#f0ece4">TUDIO</tspan>
+  </text>
+</svg>
